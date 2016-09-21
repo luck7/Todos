@@ -6,7 +6,7 @@
 
 #### Features
 
- - [1 ServicStack back-end .cs file](https://github.com/ServiceStackApps/Todos/blob/master/src/Todos/Global.asax.cs)
+ - [1 ServicStack back-end .cs file](https://github.com/NetCoreApps/Todos/blob/master/src/Todos/Startup.cs)
  - [ServiceStack.Redis](https://github.com/ServiceStack/ServiceStack.Redis)
 
 Try it out live at: [todos.servicestack.net](http://todos.servicestack.net)
