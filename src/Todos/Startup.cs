@@ -1,13 +1,12 @@
 ﻿using System.Reflection;
-using Funq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Funq;
 using ServiceStack;
 using ServiceStack.Redis;
-using ServiceStack.Text;
 
 namespace Todos
 {
@@ -99,9 +98,6 @@ namespace Todos
         // Configure the container with the necessary routes for your ServiceStack application.
         public override void Configure(Container container)
         {
-            //Configure ServiceStack Json web services to return idiomatic Json camelCase properties.
-            JsConfig.EmitCamelCaseNames = true;
-
             //Register Redis factory in Funq IoC. The default port for Redis is 6379.
             container.Register<IRedisClientsManager>(new BasicRedisClientManager("localhost:6379"));
         }
