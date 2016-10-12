@@ -1,0 +1,19 @@
+sudo: required
+language: csharp
+solution: src/Todos.sln
+services:
+  - docker
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+      sudo: required
+      dotnet: 1.0.0-preview2-003121
+      mono: none
+      env: DOTNETCORE=1
+script:
+  - chmod +x ./set-envs.sh
+  - chmod +x ./build.sh
+  - chmod +x ./deploy.sh
+  - ./build.sh
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then ./deploy.sh; fi
