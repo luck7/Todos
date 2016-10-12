@@ -99,7 +99,7 @@ namespace Todos
         public override void Configure(Container container)
         {
             //Register Redis factory in Funq IoC. The default port for Redis is 6379.
-            container.Register<IRedisClientsManager>(new BasicRedisClientManager("localhost:6379"));
+            container.Register<IRedisClientsManager>(new BasicRedisClientManager("redis:6379"));
         }
     }
 }
