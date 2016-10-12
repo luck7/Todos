@@ -8,6 +8,7 @@
             "cpu": 128,
             "memory": 256,
             "essential": true,
+            "links": "redis",
             "portMappings": [
                 {
                     "containerPort": 5000,
