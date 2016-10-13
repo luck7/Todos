@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -99,7 +100,8 @@ namespace Todos
         public override void Configure(Container container)
         {
             //Register Redis factory in Funq IoC. The default port for Redis is 6379.
-            container.Register<IRedisClientsManager>(new BasicRedisClientManager("redis-todos:6379"));
+            var configuredRedisHost = Environment.GetEnvironmentVariable("AWS_REDIS_HOST") ?? "localhost";
+            container.Register<IRedisClientsManager>(new BasicRedisClientManager(configuredRedisHost + ":6379"));
         }
     }
 }

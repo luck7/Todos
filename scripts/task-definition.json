@@ -1,34 +1,34 @@
 {
-    "family": "__ECS_TASK__",
+    "family": "${ECS_TASK}",
     "networkMode": "bridge",
     "containerDefinitions": [
         {
-            "image": "__AWS_ECS_REPO_DOMAIN__/__IMAGE_NAME__:__IMAGE_VERSION__",
-            "name": "__IMAGE_NAME__-container",
+            "image": "${AWS_ECS_REPO_DOMAIN}/${IMAGE_NAME}:${IMAGE_VERSION}",
+            "name": "${IMAGE_NAME}-container",
             "cpu": 128,
             "memory": 256,
             "essential": true,
-            "links": ["redis-todos"],
+            "links": ["${AWS_REDIS_HOST}"],
             "portMappings": [
                 {
                     "containerPort": 5000,
-                    "hostPort": 5008,
+                    "hostPort": 0,
                     "protocol": "tcp"
                 }
             ],
             "environment": [
                 {
                     "name": "VIRTUAL_HOST",
-                    "value": "todos.netcore.io"
+                    "value": "${AWS_VIRTUAL_HOST}"
                 },
                 {
-                    "name": "VIRTUAL_PORT",
-                    "value": "5008"
+                    "name": "AWS_REDIS_HOST",
+                    "value": "${AWS_REDIS_HOST}"
                 }
             ]
         },
         {
-            "name": "redis-todos",
+            "name": "${AWS_REDIS_HOST}",
             "image": "redis:3.2",
             "cpu": 128,
             "memory": 128,
