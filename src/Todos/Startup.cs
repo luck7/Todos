@@ -1,24 +1,33 @@
 ﻿using System.Reflection;
 using System;
+using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Funq;
 using ServiceStack;
+using ServiceStack.Host.Handlers;
 using ServiceStack.Redis;
 
 namespace Todos
 {
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            var host = new WebHostBuilder()
+                .UseKestrel()
+                .UseContentRoot(Directory.GetCurrentDirectory())
+                .UseIISIntegration()
+                .UseStartup<Startup>()
+                .Build();
+
+            host.Run();
+        }
+    }
+
     public class Startup
     {
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit http://go.microsoft.com/fwlink/?LinkID=398940
-        public void ConfigureServices(IServiceCollection services)
-        {
-        }
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
@@ -31,13 +40,9 @@ namespace Todos
 
             app.UseServiceStack(new AppHost());
 
-            app.Run(async (context) =>
-            {
-                await context.Response.WriteAsync("Hello World!");
-            });
+            app.Use(new RequestInfoHandler());
         }
     }
-
 
     // Define your ServiceStack web service request (i.e. Request DTO).
     [Route("/todos")]
@@ -100,8 +105,8 @@ namespace Todos
         public override void Configure(Container container)
         {
             //Register Redis factory in Funq IoC. The default port for Redis is 6379.
-            var configuredRedisHost = Environment.GetEnvironmentVariable("AWS_REDIS_HOST") ?? "localhost";
-            container.Register<IRedisClientsManager>(new BasicRedisClientManager(configuredRedisHost + ":6379"));
+            var redisHost = Environment.GetEnvironmentVariable("AWS_REDIS_HOST") ?? "localhost";
+            container.Register<IRedisClientsManager>(new BasicRedisClientManager($"{redisHost}:6379"));
         }
     }
 }
