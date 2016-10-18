@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using System;
+﻿using System;
 using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -41,6 +40,21 @@ namespace Todos
             app.UseServiceStack(new AppHost());
 
             app.Use(new RequestInfoHandler());
+        }
+    }
+
+    // Create your ServiceStack Web Service with a singleton AppHost
+    public class AppHost : AppHostBase
+    {
+        // Initializes your AppHost Instance, with the Service Name and assembly containing the Services
+        public AppHost() : base("Backbone.js TODO", typeof(TodoService).GetAssembly()) { }
+
+        // Configure your AppHost with the necessary configuration and dependencies your App needs
+        public override void Configure(Container container)
+        {
+            //Register Redis Client Manager singleton in ServiceStack's built-in Func IOC
+            var redisHost = Environment.GetEnvironmentVariable("AWS_REDIS_HOST") ?? "localhost";
+            container.Register<IRedisClientsManager>(new BasicRedisClientManager(redisHost));
         }
     }
 
@@ -92,21 +106,6 @@ namespace Todos
         public void Delete(Todo todo)
         {
             Redis.As<Todo>().DeleteById(todo.Id);
-        }
-    }
-
-    // Create your ServiceStack web service application with a singleton AppHost.
-    public class AppHost : AppHostBase
-    {
-        // Initializes your ServiceStack App Instance, with the specified assembly containing the services.
-        public AppHost() : base("Backbone.js TODO", typeof(TodoService).GetTypeInfo().Assembly) { }
-
-        // Configure the container with the necessary routes for your ServiceStack application.
-        public override void Configure(Container container)
-        {
-            //Register Redis factory in Funq IoC. The default port for Redis is 6379.
-            var redisHost = Environment.GetEnvironmentVariable("AWS_REDIS_HOST") ?? "localhost";
-            container.Register<IRedisClientsManager>(new BasicRedisClientManager($"{redisHost}:6379"));
         }
     }
 }
