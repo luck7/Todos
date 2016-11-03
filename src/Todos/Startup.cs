@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Funq;
 using ServiceStack;
+using ServiceStack.Configuration;
 using ServiceStack.Host.Handlers;
 using ServiceStack.Redis;
 
