@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Set variables
+# set environment variables used in deploy.sh and AWS task-definition.json:
 export IMAGE_NAME=netcoreapps-todos
 export IMAGE_VERSION=latest
 
