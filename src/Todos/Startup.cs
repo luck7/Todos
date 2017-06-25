@@ -48,8 +48,8 @@ namespace Todos
     public class AppHost : AppHostBase
     {
         // Initializes your AppHost Instance, with the Service Name and assembly containing the Services
-        public AppHost() : base("Backbone.js TODO", typeof(TodoService).GetAssembly()) 
-        { 
+        public AppHost() : base("Backbone.js TODO", typeof(TodoService).GetAssembly())
+        {
             AppSettings = new MultiAppSettings(
                 new EnvironmentVariableSettings(),
                 new AppSettings());
@@ -58,9 +58,13 @@ namespace Todos
         // Configure your AppHost with the necessary configuration and dependencies your App needs
         public override void Configure(Container container)
         {
+            var REDIS_ADDR = AppSettings.Get("REDIS_PORT_6379_TCP_ADDR", defaultValue: "localhost");
+            var REDIS_PORT = AppSettings.Get("REDIS_PORT_6379_TCP_PORT", defaultValue: "6379");
+            var REDIS_PASSWORD = AppSettings.Get("REDIS_PASSWORD", defaultValue: "");
             //Register Redis Client Manager singleton in ServiceStack's built-in Func IOC
             container.Register<IRedisClientsManager>(c =>
-                new RedisManagerPool(AppSettings.Get("REDIS_HOST", defaultValue:"localhost")));
+                new RedisManagerPool(REDIS_ADDR + ":" + REDIS_PORT + "?Password=" + REDIS_PASSWORD));
+            //new RedisManagerPool(AppSettings.Get("REDIS_HOST", defaultValue:"localhost")));
         }
     }
 
